@@ -82,6 +82,15 @@ void ASCharacter::MoveLeft(const FInputActionValue& Value)
 	AddMovementInput(RightVector, FloatValue);
 }
 
+void ASCharacter::PrimaryAttack()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01") + FVector(0, 0, 50);
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);	
+}
+
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
 {
@@ -94,6 +103,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &ASCharacter::PrimaryAttack);
 
 	UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 	if (Input)
