@@ -23,6 +23,7 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	RadialForceComp->Radius = 600;
 	RadialForceComp->ImpulseStrength = 2000;
 	RadialForceComp->ForceStrength = 10;
+	RadialForceComp->bImpulseVelChange = true;
 }
 
 // Called when the game starts or when spawned
