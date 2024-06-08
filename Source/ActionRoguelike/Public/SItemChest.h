@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* LidMesh;
 
+	bool PlayLidOpenAnim;
+	float LidOpenAnimDuration;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
