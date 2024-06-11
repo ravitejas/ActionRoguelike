@@ -18,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	ASExplosiveBarrel();
 
+	UFUNCTION(BlueprintCallable)
+	void Explode();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)

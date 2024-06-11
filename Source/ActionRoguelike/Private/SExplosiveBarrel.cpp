@@ -26,6 +26,11 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	RadialForceComp->bImpulseVelChange = true;
 }
 
+void ASExplosiveBarrel::Explode()
+{
+	RadialForceComp->FireImpulse();
+}
+
 // Called when the game starts or when spawned
 void ASExplosiveBarrel::BeginPlay()
 {
@@ -36,7 +41,7 @@ void ASExplosiveBarrel::BeginPlay()
 void ASExplosiveBarrel::OnBarrelComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 							UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	RadialForceComp->FireImpulse();
+	Explode();
 }
 
 // Called every frame
