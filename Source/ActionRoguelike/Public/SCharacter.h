@@ -33,10 +33,10 @@ protected:
 
 	FTimerHandle TimerHandle_PrimaryAttack;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USpringArmComponent* SpringArmComp;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraComp;
 
 	UPROPERTY(VisibleAnywhere)

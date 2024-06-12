@@ -15,6 +15,7 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	StaticMeshComp->SetSimulatePhysics(true);
 	StaticMeshComp->SetCollisionProfileName("PhysicsActor");
 	RootComponent = StaticMeshComp;
+	StaticMeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnBarrelComponentHit);
 
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>("RadialForceComp");
 	RadialForceComp->SetAutoActivate(false);
@@ -34,7 +35,6 @@ void ASExplosiveBarrel::Explode()
 void ASExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-	StaticMeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnBarrelComponentHit);
 }
 
 void ASExplosiveBarrel::PostInitializeComponents()

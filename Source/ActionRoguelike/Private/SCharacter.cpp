@@ -94,8 +94,33 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAttack_TimeElapsed()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+	FVector const HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	auto const TraceStartPos = CameraComp->GetComponentLocation();
+	auto const TraceDir = GetController()->GetControlRotation().Vector();
+	auto const TraceLengthCM = 1000.0f;
+	auto const TraceSegment = TraceDir * TraceLengthCM;
+
+	FVector const TraceTargetPos = TraceStartPos + TraceSegment;
+	FCollisionObjectQueryParams QueryParams;
+	QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	FHitResult HitResult;
+	bool const HitSomeObject = GetWorld()->LineTraceSingleByObjectType(HitResult, TraceStartPos, TraceTargetPos, QueryParams);
+	FVector ProjectileTargetPos;
+	if (HitSomeObject)
+	{
+		ProjectileTargetPos = HitResult.GetActor()->GetActorLocation();
+		//DrawDebugLine(GetWorld(), TraceStartPos, ProjectileTargetPos, FColor::Green, true, 5.0f, 0, 2.f);
+	}
+	else
+	{
+		ProjectileTargetPos = TraceTargetPos;
+		//DrawDebugLine(GetWorld(), TraceStartPos, TraceTargetPos, FColor::Red, true, 5.0f, 0, 2.f);
+	}	
+	
+	//DrawDebugSphere(GetWorld(), ProjectileTargetPos, 50, 32, FColor::Yellow, true, 2.0f, 0, 2.f);
+	FVector const ProjectileDir = (ProjectileTargetPos - HandLocation);
+	FTransform SpawnTM = FTransform(ProjectileDir.Rotation(), HandLocation);
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
