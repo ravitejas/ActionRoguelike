@@ -54,6 +54,8 @@ void ASItemChest::Tick(float DeltaTime)
 // 				FString::Printf(TEXT("Cur Pitch: %.3f, Next Pitch: %.3f"), LidRelRot.Pitch, NextPitch));
 // 		}
 
+		UE_LOG(LogTemp, Log, TEXT("Cur Pitch: %.3f, Next Pitch: %.3f"), LidRelRot.Pitch, NextPitch);
+
 		if (ShouldOpenLid)
 		{
 			if (NextPitch > OpenLidPitch)

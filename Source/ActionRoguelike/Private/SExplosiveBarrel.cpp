@@ -4,6 +4,7 @@
 #include "SExplosiveBarrel.h"
 #include "Components/StaticMeshComponent.h"
 #include "PhysicsEngine/RadialForceComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ASExplosiveBarrel::ASExplosiveBarrel()
@@ -33,7 +34,7 @@ void ASExplosiveBarrel::Explode()
 void ASExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	StaticMeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnBarrelComponentHit);
 }
 
 void ASExplosiveBarrel::PostInitializeComponents()
@@ -43,13 +44,16 @@ void ASExplosiveBarrel::PostInitializeComponents()
 // 	FScriptDelegate hitDelegate;
 // 	hitDelegate.BindUFunction(this, "OnBarrelComponentHit");
 // 	StaticMeshComp->OnComponentHit.Add(hitDelegate);
-	StaticMeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnBarrelComponentHit);
+	
 }
 
 void ASExplosiveBarrel::OnBarrelComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 							UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	Explode();
+
+	FString InfoMessage = FString::Printf(TEXT("Hit at loc: %s"), *Hit.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), Hit.ImpactPoint, InfoMessage, nullptr, FColor::Green, 2.0f, true);
 }
 
 // Called every frame
