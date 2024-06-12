@@ -16,13 +16,16 @@ ASItemChest::ASItemChest()
 	LidMesh->SetupAttachment(BaseMesh);
 
 	OpenLidPitch = 89;
-	PlayLidOpenAnim = false;
-	LidOpenAnimDuration = 1.0f;
+	CloseLidPitch = 1;
+	PlayLidAnim = false;
+	LidAnimDuration = 1.0f;
+	ShouldOpenLid = false;
 }
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	PlayLidOpenAnim = true;
+	PlayLidAnim = true;
+	ShouldOpenLid = !ShouldOpenLid;
 }
 
 
@@ -38,23 +41,34 @@ void ASItemChest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (PlayLidOpenAnim)
+	if (PlayLidAnim)
 	{
 		FRotator const& LidRelRot = LidMesh->GetRelativeRotation();
-		float const DeltaLidAngle = (OpenLidPitch * DeltaTime) / LidOpenAnimDuration;
-		float const NextPitch = LidRelRot.Pitch + DeltaLidAngle;
+		float const DeltaLidAngle = (OpenLidPitch * DeltaTime) / LidAnimDuration;
+		float const NextPitch = LidRelRot.Pitch + DeltaLidAngle * (ShouldOpenLid ? 1.0f : -1.0f);
 		LidMesh->SetRelativeRotation(FRotator(NextPitch, 0, 0));
 
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, 
-				FString::Printf(TEXT("Cur Pitch: %.3f, Next Pitch: %.3f"), LidRelRot.Pitch, NextPitch));
-		}
+// 		if (GEngine)
+// 		{
+// 			GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, 
+// 				FString::Printf(TEXT("Cur Pitch: %.3f, Next Pitch: %.3f"), LidRelRot.Pitch, NextPitch));
+// 		}
 
-		if (NextPitch > OpenLidPitch)
+		if (ShouldOpenLid)
 		{
-			// finished opening the lid
-			PlayLidOpenAnim = false;
+			if (NextPitch > OpenLidPitch)
+			{
+				// finished opening the lid
+				PlayLidAnim = false;
+			}
+		}
+		else
+		{
+			if (NextPitch < CloseLidPitch)
+			{
+				// finished closing the lid
+				PlayLidAnim = false;
+			}
 		}
 	}
 }

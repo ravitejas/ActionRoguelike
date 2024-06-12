@@ -25,8 +25,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 
-	bool PlayLidOpenAnim;
-	float LidOpenAnimDuration;
+	bool PlayLidAnim;
+	float LidAnimDuration;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool ShouldOpenLid;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,6 +37,9 @@ protected:
 public:	
 	UPROPERTY(EditAnywhere)
 	float OpenLidPitch;
+
+	UPROPERTY(EditAnywhere)
+	float CloseLidPitch;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

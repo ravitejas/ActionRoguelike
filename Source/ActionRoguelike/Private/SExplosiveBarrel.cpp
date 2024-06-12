@@ -15,15 +15,13 @@ ASExplosiveBarrel::ASExplosiveBarrel()
 	StaticMeshComp->SetCollisionProfileName("PhysicsActor");
 	RootComponent = StaticMeshComp;
 
-	FScriptDelegate hitDelegate;
-	hitDelegate.BindUFunction(this, "OnBarrelComponentHit");
-	StaticMeshComp->OnComponentHit.Add(hitDelegate);
-
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>("RadialForceComp");
-	RadialForceComp->Radius = 600;
+	RadialForceComp->SetAutoActivate(false);
+	RadialForceComp->Radius = 650;
 	RadialForceComp->ImpulseStrength = 2000;
 	RadialForceComp->ForceStrength = 10;
 	RadialForceComp->bImpulseVelChange = true;
+	RadialForceComp->AddCollisionChannelToAffect(ECC_WorldDynamic);
 }
 
 void ASExplosiveBarrel::Explode()
@@ -36,6 +34,16 @@ void ASExplosiveBarrel::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASExplosiveBarrel::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+// 	FScriptDelegate hitDelegate;
+// 	hitDelegate.BindUFunction(this, "OnBarrelComponentHit");
+// 	StaticMeshComp->OnComponentHit.Add(hitDelegate);
+	StaticMeshComp->OnComponentHit.AddDynamic(this, &ASExplosiveBarrel::OnBarrelComponentHit);
 }
 
 void ASExplosiveBarrel::OnBarrelComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
