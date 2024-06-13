@@ -29,6 +29,10 @@ protected:
 
 	void LifeTimeElapsed();
 	void TeleportPlayer();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+				FVector NormalImpulse, const FHitResult& Hit);
 	
 public:
 	ASTeleportProjectile();

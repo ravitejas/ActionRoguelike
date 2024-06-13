@@ -12,8 +12,9 @@ ASTeleportProjectile::ASTeleportProjectile()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	SphereComp->SetCollisionProfileName("Projectile");
 	MovementComp->InitialSpeed = 1000.0f;
+	SphereComp->OnComponentHit.AddDynamic(this, &ASTeleportProjectile::OnHit);
 }
 
 // Called every frame
@@ -51,4 +52,12 @@ void ASTeleportProjectile::TeleportPlayer()
 		Player->SetActorLocation(GetActorLocation());
 		UE_LOG(LogTemp, Log, TEXT("Teleported actor %s"), *Player->GetActorNameOrLabel());
 	}
+
+	Destroy();
+}
+
+void ASTeleportProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
+						UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	LifeTimeElapsed();
 }
