@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	TSubclassOf<AActor> SuperProjectileClass;
 
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	TSubclassOf<AActor> TeleportProjectileClass;
+
 	FTimerHandle TimerHandle_PrimaryAttack;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -70,6 +73,7 @@ protected:
 	void MoveLeft(const FInputActionValue& Value);
 
 	void SuperAttack();
+	void Teleport();
 	void PrimaryAttack();
 	void PrimaryAttack_TimeElapsed();
 	void PrimaryInteract();

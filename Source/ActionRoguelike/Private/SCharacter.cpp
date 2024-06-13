@@ -95,6 +95,20 @@ void ASCharacter::SuperAttack()
 	GetWorld()->SpawnActor<AActor>(SuperProjectileClass, SpawnTM, SpawnParams);
 }
 
+void ASCharacter::Teleport()
+{
+	if (ensure(TeleportProjectileClass))
+	{
+		FVector Offset = (GetController()->GetControlRotation().Vector() * 50.0f);
+		FVector const HandLocation = GetMesh()->GetSocketLocation("Muzzle_01") + Offset;
+		FTransform SpawnTM = FTransform(GetController()->GetControlRotation(), HandLocation);
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Instigator = this;
+		GetWorld()->SpawnActor<AActor>(TeleportProjectileClass, SpawnTM, SpawnParams);
+	}
+}
+
 void ASCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnim);
@@ -159,6 +173,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("SuperAttack", EInputEvent::IE_Pressed, this, &ASCharacter::SuperAttack);
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &ASCharacter::PrimaryInteract);
+	PlayerInputComponent->BindAction("Teleport", EInputEvent::IE_Pressed, this, &ASCharacter::Teleport);
 
 	UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 	if (Input)

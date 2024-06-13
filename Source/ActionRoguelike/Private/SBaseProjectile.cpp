@@ -20,9 +20,11 @@ ASBaseProjectile::ASBaseProjectile()
 	MovementComp->InitialSpeed = 500.0f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
+	MovementComp->ProjectileGravityScale = 0;
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(SphereComp);
+	EffectComp->SetEnableGravity(false);
 
 }
 
@@ -30,7 +32,7 @@ ASBaseProjectile::ASBaseProjectile()
 void ASBaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SphereComp->IgnoreActorWhenMoving(GetInstigator(), true);
 }
 
 // Called every frame
