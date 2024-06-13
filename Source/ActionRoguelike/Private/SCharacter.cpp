@@ -85,6 +85,16 @@ void ASCharacter::MoveLeft(const FInputActionValue& Value)
 	AddMovementInput(RightVector, FloatValue);
 }
 
+void ASCharacter::SuperAttack()
+{
+	FVector const HandLocation = GetMesh()->GetSocketLocation("Muzzle_01") + FVector(0, 0, 50);
+	FTransform SpawnTM = FTransform(GetController()->GetControlRotation(), HandLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	GetWorld()->SpawnActor<AActor>(SuperProjectileClass, SpawnTM, SpawnParams);
+}
+
 void ASCharacter::PrimaryAttack()
 {
 	PlayAnimMontage(AttackAnim);
@@ -146,6 +156,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("PrimaryAttack", EInputEvent::IE_Pressed, this, &ASCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("SuperAttack", EInputEvent::IE_Pressed, this, &ASCharacter::SuperAttack);
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("PrimaryInteract", EInputEvent::IE_Pressed, this, &ASCharacter::PrimaryInteract);
 

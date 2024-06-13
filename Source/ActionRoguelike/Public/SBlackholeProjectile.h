@@ -3,16 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "SBaseProjectile.h"
-#include "SMagicProjectile.generated.h"
+#include "SBlackholeProjectile.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class ACTIONROGUELIKE_API ASMagicProjectile : public ASBaseProjectile
+class ACTIONROGUELIKE_API ASBlackholeProjectile : public ASBaseProjectile
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
-	ASMagicProjectile();
+	ASBlackholeProjectile();
+	
 };
