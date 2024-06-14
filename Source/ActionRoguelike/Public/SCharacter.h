@@ -13,6 +13,7 @@ class UInputMappingContext;
 class UInputAction;
 class USInteractionComponent;
 class UAnimMontage;
+class USAttributeComponent;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -44,6 +45,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	USAttributeComponent* AttrComp;
 
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;

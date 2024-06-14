@@ -4,6 +4,7 @@
 #include "SMagicProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "SAttributeComponent.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -14,4 +15,29 @@ ASMagicProjectile::ASMagicProjectile()
 
 	SphereComp->SetCollisionProfileName("Projectile");
 	MovementComp->InitialSpeed = 1300.0f;
+
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnBeginOverlap);
+}
+
+// Called when the game starts or when spawned
+void ASMagicProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+void ASMagicProjectile::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, 
+	const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		USAttributeComponent* AttrComp = OtherActor->GetComponentByClass<USAttributeComponent>();
+		if (AttrComp)
+		{
+			static float PROJECTILE_DAMAGE = -20.f;
+			AttrComp->AddHealth(PROJECTILE_DAMAGE);
+			Destroy();
+		}
+	}
 }
