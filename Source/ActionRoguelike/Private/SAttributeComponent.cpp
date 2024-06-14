@@ -14,6 +14,7 @@ bool USAttributeComponent::AddHealth(float healthDelta)
 	if (ensureAlways(healthDelta < 0) && Health > 0)
 	{
 		Health += healthDelta;
+		OnHealthChanged.Broadcast(nullptr, this, Health, healthDelta);
 		if (Health < 0)
 		{
 			Health = 0;

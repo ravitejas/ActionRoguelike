@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Delegates/DelegateCombinations.h"
 #include "SAttributeComponent.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatingActor, USAttributeComponent*, OwningComp, float, NewHealth, float, DeltaHealth);
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -22,6 +25,9 @@ protected:
 	float Health;
 
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChanged OnHealthChanged;
 
 	// returns whether the health was added
 	UFUNCTION(BlueprintCallable)

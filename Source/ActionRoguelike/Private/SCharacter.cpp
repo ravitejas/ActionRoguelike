@@ -10,8 +10,6 @@
 #include "SInteractionComponent.h"
 #include "SAttributeComponent.h"
 
-
-
 // Sets default values
 ASCharacter::ASCharacter()
 {
