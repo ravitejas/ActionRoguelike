@@ -26,7 +26,7 @@ void ASTeleportProjectile::Tick(float DeltaTime)
 void ASTeleportProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	float LifeTime = 0.5f;
+	float LifeTime = 0.3f;
 	GetWorldTimerManager().SetTimer(TimerHandle_Explosion, this, &ASTeleportProjectile::LifeTimeElapsed, LifeTime);
 }
 
@@ -59,5 +59,8 @@ void ASTeleportProjectile::TeleportPlayer()
 void ASTeleportProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 						UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	LifeTimeElapsed();
+	if (OtherActor != GetInstigator())
+	{
+		LifeTimeElapsed();
+	}
 }

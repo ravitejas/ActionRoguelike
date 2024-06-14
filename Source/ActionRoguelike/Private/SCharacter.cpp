@@ -92,7 +92,8 @@ void ASCharacter::SuperAttack()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
-	GetWorld()->SpawnActor<AActor>(SuperProjectileClass, SpawnTM, SpawnParams);
+	AActor* Projectile = GetWorld()->SpawnActor<AActor>(SuperProjectileClass, SpawnTM, SpawnParams);
+	GetMesh()->IgnoreActorWhenMoving(Projectile, true);
 }
 
 void ASCharacter::Teleport()
@@ -105,7 +106,8 @@ void ASCharacter::Teleport()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.Instigator = this;
-		GetWorld()->SpawnActor<AActor>(TeleportProjectileClass, SpawnTM, SpawnParams);
+		AActor* Projectile = GetWorld()->SpawnActor<AActor>(TeleportProjectileClass, SpawnTM, SpawnParams);
+		GetMesh()->IgnoreActorWhenMoving(Projectile, true);
 	}
 }
 
@@ -121,19 +123,21 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	FVector const HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	auto const TraceStartPos = CameraComp->GetComponentLocation();
 	auto const TraceDir = GetController()->GetControlRotation().Vector();
-	auto const TraceLengthCM = 1000.0f;
+	auto const TraceLengthCM = 800.0f;
 	auto const TraceSegment = TraceDir * TraceLengthCM;
 
 	FVector const TraceTargetPos = TraceStartPos + TraceSegment;
 	FCollisionObjectQueryParams QueryParams;
 	QueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
 	QueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	QueryParams.RemoveObjectTypesToQuery(ECC_Camera);
+	QueryParams.RemoveObjectTypesToQuery(ECC_Pawn);
 	FHitResult HitResult;
 	bool const HitSomeObject = GetWorld()->LineTraceSingleByObjectType(HitResult, TraceStartPos, TraceTargetPos, QueryParams);
 	FVector ProjectileTargetPos;
 	if (HitSomeObject)
 	{
-		ProjectileTargetPos = HitResult.GetActor()->GetActorLocation();
+		ProjectileTargetPos = HitResult.ImpactPoint;
 		//DrawDebugLine(GetWorld(), TraceStartPos, ProjectileTargetPos, FColor::Green, true, 5.0f, 0, 2.f);
 	}
 	else
@@ -148,7 +152,8 @@ void ASCharacter::PrimaryAttack_TimeElapsed()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Instigator = this;
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	AActor* Projectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	GetMesh()->IgnoreActorWhenMoving(Projectile, true);
 }
 
 void ASCharacter::PrimaryInteract()
